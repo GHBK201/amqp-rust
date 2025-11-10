@@ -1,1 +1,138 @@
-README
+# AMQP-Rust
+
+一个用 Rust 实现的 AMQP (Advanced Message Queuing Protocol) 0-9-1 协议解析库。
+
+## 功能特性
+
+- **帧解析**: 支持解析和序列化 AMQP 协议的各种帧类型
+  - Method Frame (方法帧)
+  - Header Frame (头部帧)
+  - Body Frame (消息体帧)
+  - Heartbeat Frame (心跳帧)
+
+- **协议常量**: 提供完整的 AMQP 协议常量定义
+  - 帧类型常量
+  - 类 ID 和方法 ID
+  - 连接、通道、队列、交换器相关常量
+
+- **类型系统**: 完整的 AMQP 数据类型支持
+  - FieldValue 字段值类型
+  - FieldTable 字段表
+  - BasicProperties 消息属性
+
+- **错误处理**: 完善的错误类型定义和处理
+
+## 安装
+
+在 `Cargo.toml` 中添加依赖:
+
+```toml
+[dependencies]
+amqp-rust = "0.1.0"
+```
+
+## 快速开始
+
+```rust
+use amqp_rust::{Frame, CLASS_BASIC, METHOD_BASIC_PUBLISH};
+use bytes::{Bytes, BytesMut};
+
+// 创建并序列化一个心跳帧
+let heartbeat = Frame::Heartbeat;
+let mut buf = BytesMut::new();
+heartbeat.serialize(&mut buf).unwrap();
+
+// 解析帧
+let parsed_frame = Frame::parse(&mut buf).unwrap().unwrap();
+assert!(parsed_frame.is_heartbeat());
+
+// 创建消息体帧
+let body_frame = Frame::Body {
+    channel: 1,
+    data: Bytes::from("Hello, AMQP!"),
+};
+
+// 序列化和解析
+let mut buf = BytesMut::new();
+body_frame.serialize(&mut buf).unwrap();
+let parsed = Frame::parse(&mut buf).unwrap().unwrap();
+```
+
+## 使用示例
+
+查看 `examples/basic_usage.rs` 获取更多示例:
+
+```bash
+cargo run --example basic_usage
+```
+
+## 架构设计
+
+### 模块结构
+
+- `constants`: AMQP 协议常量定义
+- `frame`: 帧解析和序列化实现
+- `types`: AMQP 数据类型定义
+- `error`: 错误类型和处理
+
+### 帧结构
+
+所有 AMQP 帧都遵循以下格式:
+
+```
++-------------+----------+------+-------------+-----------+
+| Frame Type  | Channel  | Size |   Payload   | Frame End |
+| (1 byte)    | (2 bytes)| (4 bytes) | (size bytes) | (1 byte)  |
++-------------+----------+------+-------------+-----------+
+```
+
+帧类型包括:
+- `0x01`: Method Frame - 用于传输方法调用
+- `0x02`: Header Frame - 用于传输消息头部
+- `0x03`: Body Frame - 用于传输消息体
+- `0x08`: Heartbeat Frame - 用于保持连接活跃
+
+## 开发
+
+### 构建项目
+
+```bash
+cargo build
+```
+
+### 运行测试
+
+```bash
+cargo test
+```
+
+### 运行示例
+
+```bash
+cargo run --example basic_usage
+```
+
+## 测试
+
+库包含全面的单元测试，覆盖以下方面:
+- 帧的解析和序列化
+- 错误处理
+- 边界情况处理
+- 数据完整性验证
+
+## 协议版本
+
+当前实现基于 AMQP 0-9-1 协议规范。
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 许可证
+
+MIT License
+
+## 参考资料
+
+- [AMQP 0-9-1 规范](https://www.rabbitmq.com/amqp-0-9-1-reference.html)
+- [RabbitMQ 文档](https://www.rabbitmq.com/documentation.html)
