@@ -1,0 +1,13 @@
+[package]
+name = "amqp-rust"
+version = "0.1.0"
+edition = "2021"
+authors = ["GHBK201"]
+description = "A Rust AMQP protocol parsing library"
+license = "MIT"
+repository = "https://github.com/GHBK201/amqp-rust"
+
+[dependencies]
+bytes = "1.5"
+
+[dev-dependencies]
