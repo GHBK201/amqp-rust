@@ -1,4 +1,4 @@
-use amqp_rust::{Frame, FRAME_HEARTBEAT, CLASS_BASIC, METHOD_BASIC_PUBLISH};
+use amqp_rust::{Frame, CLASS_BASIC, METHOD_BASIC_PUBLISH};
 use bytes::{Bytes, BytesMut};
 
 fn main() {

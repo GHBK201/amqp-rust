@@ -1,4 +1,4 @@
-/// AMQP Protocol Constants
+//! AMQP Protocol Constants
 
 // Protocol version
 pub const PROTOCOL_VERSION_MAJOR: u8 = 0;

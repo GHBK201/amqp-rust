@@ -1,4 +1,4 @@
-/// AMQP Frame parsing and serialization
+//! AMQP Frame parsing and serialization
 
 use crate::constants::*;
 use crate::error::{AmqpError, Result};
@@ -27,7 +27,7 @@ pub enum Frame {
         class_id: u16,
         weight: u16,
         body_size: u64,
-        properties: BasicProperties,
+        properties: Box<BasicProperties>,
     },
     Body {
         channel: u16,
@@ -83,7 +83,7 @@ impl Frame {
                 let body_size = buf.get_u64();
                 
                 // Parse properties (simplified - full implementation would parse property flags)
-                let properties = BasicProperties::default();
+                let properties = Box::new(BasicProperties::default());
                 buf.advance(size - 12);
 
                 Frame::Header {

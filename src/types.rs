@@ -1,4 +1,4 @@
-/// AMQP basic types
+//! AMQP basic types
 
 use std::collections::HashMap;
 
